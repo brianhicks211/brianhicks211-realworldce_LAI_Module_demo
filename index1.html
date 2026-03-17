@@ -1,0 +1,875 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+  <title>Getting to the Point: LAI Learning Module</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,1,0&family=JetBrains+Mono:wght@400;700" rel="stylesheet"/>
+
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap');
+    body { font-family: 'Inter', sans-serif; }
+
+    .module-card { transition: all 0.3s ease; }
+    .module-card:hover { transform: translateY(-5px); box-shadow: 0 10px 20px rgba(0,0,0,0.1); }
+
+    .gradient-bg { background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%); }
+    .step-active { background-color: #3b82f6; color: white; }
+    .step-inactive { background-color: #e5e7eb; color: #6b7280; }
+
+    .sim-overlay { background: rgba(0,0,0,0.4); backdrop-filter: blur(4px); }
+
+    .custom-scrollbar::-webkit-scrollbar { width: 6px; }
+    .custom-scrollbar::-webkit-scrollbar-track { background: #f1f1f1; }
+    .custom-scrollbar::-webkit-scrollbar-thumb { background: #3b82f6; border-radius: 10px; }
+
+    .info-pill { background: #eff6ff; border: 1px solid #bfdbfe; color: #1e40af; }
+  
+    .bg-medical-blue { background-color: #002147; }
+    .text-medical-blue { color: #002147; }
+    .glass { background: rgba(255, 255, 255, 0.9); backdrop-filter: blur(12px); border-bottom: 1px solid rgba(226, 232, 240, 1); }
+
+</style>
+</head>
+
+<body class="bg-slate-50 text-slate-900 overflow-hidden h-screen flex flex-col">
+  <!--
+    NOTE:
+    Put your transparent Real SIM logo file in the SAME folder as this HTML.
+    Name it: real-sim-logo.png (or change the src below to match your filename).
+  -->
+  
+  <!-- Accredited Header (CMV Style) -->
+  <div class="bg-medical-blue text-white text-[10px] font-bold py-2 px-6 flex justify-between items-center tracking-[0.2em] uppercase">
+    <span>Real World CE: Accredited Clinical Curriculum</span>
+    <span class="flex items-center gap-2">
+      <span class="material-symbols-outlined text-[14px]">verified</span> 1.0 AMA PRA / CE
+    </span>
+  </div>
+
+  <!-- Main Navigation (CMV Style) -->
+  <header class="sticky top-0 z-50 glass">
+    <div class="w-full px-3 h-20 flex items-center justify-between">
+      <div class="flex items-center gap-2">
+        <!-- Icon -->
+        <div class="flex items-center justify-center">
+          <a href="#" rel="noopener noreferrer" class="block">
+            <img src="logo-transparent.png" class="h-14 w-auto object-contain drop-shadow-lg" alt="Real World CE Logo"
+                 loading="lazy" decoding="async"
+                 onerror="this.onerror=null; this.src=window.__missingImgSvg ? window.__missingImgSvg('Missing: logo-transparent.png') : this.src;"/>
+          </a>
+        </div>
+
+        <!-- Text Logo -->
+        <div class="flex flex-col leading-tight">
+          <span class="font-extrabold text-2xl tracking-tight text-slate-900 uppercase whitespace-nowrap">
+            REAL WORLD <span class="text-blue-600 inline-block">CE</span>
+          </span>
+          </span>
+          <span class="text-[10px] font-semibold tracking-widest uppercase text-slate-500 mt-1">
+            Featuring:
+            <span class="font-extrabold text-slate-900">REAL </span>
+            <span class="font-extrabold text-blue-600">SIM</span>
+          </span>
+        </div>
+      </div>
+
+      <nav class="hidden lg:flex items-center gap-8">
+        <div class="flex gap-6 text-sm font-semibold text-slate-600">
+          <button class="hover:text-blue-600 transition" onclick="showSection('intro')">Introduction</button>
+          <button class="hover:text-blue-600 transition" onclick="showSection('module1')">Evidence</button>
+          <button class="hover:text-blue-600 transition" onclick="showSection('module2')">SDM</button>
+          <button class="hover:text-blue-600 transition" onclick="showSection('module3')">Logistics</button>
+          <button class="hover:text-blue-600 transition" onclick="showSection('module4')">Knowledge Check</button>
+          <button class="hover:text-blue-600 transition" onclick="showSection('simulation')">Injection Lab</button>
+        </div>
+
+        <div class="h-10 w-px bg-slate-200"></div>
+
+        <div class="flex flex-col items-end">
+          <span class="text-[10px] font-black text-slate-400 uppercase">Mastery Progress</span>
+          <div class="flex items-center gap-3 mt-1">
+            <div class="w-40 h-2 bg-slate-100 rounded-full overflow-hidden border border-slate-200">
+              <div class="h-full bg-blue-600 transition-all duration-500" id="progressBar" style="width: 0%"></div>
+            </div>
+            <span id="progressText" class="text-xs font-bold text-blue-600">0%</span>
+          </div>
+        </div>
+
+        <button class="text-slate-600 hover:text-blue-600 flex items-center gap-1 transition-colors" onclick="toggleResources()">
+          <span class="material-symbols-outlined">library_books</span>
+          <span class="text-sm font-semibold">Resources</span>
+        </button>
+      </nav>
+    </div>
+  </header>
+
+
+  <div class="flex flex-1 overflow-hidden">
+    <aside class="w-72 bg-white border-r border-slate-200 hidden lg:flex flex-col">
+      <nav class="flex-1 p-4 space-y-1 overflow-y-auto custom-scrollbar">
+        <button class="nav-btn w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all hover:bg-slate-50 group active"
+                id="btn-intro" onclick="showSection('intro')">
+          <span class="material-symbols-outlined text-slate-400 group-hover:text-blue-500">home</span>
+          <span class="font-medium text-slate-600 group-hover:text-blue-700">Introduction</span>
+        </button>
+
+        <div class="h-px bg-slate-100 my-2"></div>
+        <h3 class="px-4 text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-2">Core Curriculum</h3>
+
+        <button class="nav-btn w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all hover:bg-slate-50 group"
+                id="btn-module1" onclick="showSection('module1')">
+          <span class="material-symbols-outlined text-slate-400 group-hover:text-blue-500">analytics</span>
+          <span class="font-medium text-slate-600 group-hover:text-blue-700 text-left">1. Evidence &amp; Guidelines</span>
+        </button>
+
+        <button class="nav-btn w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all hover:bg-slate-50 group"
+                id="btn-module2" onclick="showSection('module2')">
+          <span class="material-symbols-outlined text-slate-400 group-hover:text-blue-500">handshake</span>
+          <span class="font-medium text-slate-600 group-hover:text-blue-700 text-left">2. Shared Decision-Making</span>
+        </button>
+
+        <button class="nav-btn w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all hover:bg-slate-50 group"
+                id="btn-module3" onclick="showSection('module3')">
+          <span class="material-symbols-outlined text-slate-400 group-hover:text-blue-500">settings_suggest</span>
+          <span class="font-medium text-slate-600 group-hover:text-blue-700 text-left">3. Clinic Logistics</span>
+        </button>
+
+        <button class="nav-btn w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all hover:bg-slate-50 group"
+                id="btn-module4" onclick="showSection('module4')">
+          <span class="material-symbols-outlined text-slate-400 group-hover:text-blue-500">quiz</span>
+          <span class="font-medium text-slate-600 group-hover:text-blue-700 text-left">4. Knowledge Check</span>
+        </button>
+
+        <div class="h-px bg-slate-100 my-2"></div>
+        <h3 class="px-4 text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-2">Practical Skills</h3>
+
+        <button class="nav-btn w-full flex items-center gap-3 px-4 py-3 rounded-xl bg-blue-50 text-blue-700 shadow-sm border border-blue-100"
+                id="btn-simulation" onclick="showSection('simulation')">
+          <span class="material-symbols-outlined text-blue-500">3d_rotation</span>
+          <span class="font-bold">Virtual Injection Lab</span>
+        </button>
+      </nav>
+
+      <div class="p-4 border-t border-slate-100">
+        <div class="bg-blue-50 p-3 rounded-xl">
+          <p class="text-[10px] font-bold text-blue-800 uppercase mb-1">Upcoming Live Event</p>
+          <p class="text-xs font-semibold text-blue-600">APNA Annual Conference 2026</p>
+          <p class="text-[10px] text-blue-500">Phoenix, AZ | Oct 28-31</p>
+        </div>
+      </div>
+    </aside>
+
+    <main class="flex-1 overflow-y-auto custom-scrollbar bg-slate-50">
+      <section class="content-section p-8 max-w-5xl mx-auto block" id="intro">
+        <div class="bg-white rounded-3xl shadow-xl overflow-hidden border border-slate-200">
+          <div class="relative h-64">
+            <img alt="Healthcare Team" class="w-full h-full object-cover"
+                 src="Heart Table.png" loading="lazy" decoding="async"
+                 onerror="this.onerror=null; this.src=window.__missingImgSvg('Missing: Heart Table.png');"/>
+            <div class="absolute inset-0 bg-gradient-to-t from-blue-900/90 to-transparent flex items-end p-8">
+              <div class="text-white">
+                <span class="bg-blue-500 px-3 py-1 rounded-full text-xs font-bold uppercase mb-4 inline-block">Course Introduction</span>
+                <h2 class="text-4xl font-black">Bridging the Reaction Gap</h2>
+                <p class="text-blue-100 mt-2 max-w-2xl">Transitioning to Long-Acting Injectables early in schizophrenia treatment to prevent relapse and improve patient outcomes.</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="p-8 grid md:grid-cols-2 gap-12">
+            <div>
+              <h3 class="text-2xl font-bold text-slate-800 mb-6 flex items-center gap-2">
+                <span class="material-symbols-outlined text-blue-500">task_alt</span>
+                Learning Objectives
+              </h3>
+
+              <ul class="space-y-4">
+                <li class="flex gap-3">
+                  <div class="w-6 h-6 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center text-xs font-bold shrink-0 mt-1">1</div>
+                  <p class="text-slate-600 text-sm">Describe proactive guideline recommendations for early LAI administration and review evidence from clinical trials.</p>
+                </li>
+                <li class="flex gap-3">
+                  <div class="w-6 h-6 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center text-xs font-bold shrink-0 mt-1">2</div>
+                  <p class="text-slate-600 text-sm">Demonstrate shared decision-making techniques to align treatment with patient goals and autonomy.</p>
+                </li>
+                <li class="flex gap-3">
+                  <div class="w-6 h-6 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center text-xs font-bold shrink-0 mt-1">3</div>
+                  <p class="text-slate-600 text-sm">Master clinic logistics and transition protocols, including proper injection techniques for Ventrogluteal and gluteal sites.</p>
+                </li>
+              </ul>
+
+              <div class="mt-10 p-4 bg-orange-50 border border-orange-200 rounded-2xl flex gap-4">
+                <span class="material-symbols-outlined text-orange-500">warning</span>
+                <div>
+                  <p class="text-sm font-bold text-orange-800">The Problem</p>
+                  <p class="text-xs text-orange-700">Despite clear evidence of superior outcomes, only 4% of patients receive LAIs early in treatment.</p>
+                </div>
+              </div>
+            </div>
+
+            <div class="bg-slate-50 p-6 rounded-2xl border border-slate-200">
+              <h3 class="font-bold text-slate-800 mb-4">Module Overview</h3>
+
+              <div class="space-y-4">
+                <div class="flex items-center justify-between p-3 bg-white rounded-xl border border-slate-200">
+                  <div class="flex items-center gap-3">
+                    <span class="material-symbols-outlined text-blue-400">timer</span>
+                    <span class="text-sm font-medium text-slate-600">Total Duration</span>
+                  </div>
+                  <span class="text-sm font-bold text-blue-600">60 Minutes</span>
+                </div>
+
+                <div class="flex items-center justify-between p-3 bg-white rounded-xl border border-slate-200">
+                  <div class="flex items-center gap-3">
+                    <span class="material-symbols-outlined text-green-400">workspace_premium</span>
+                    <span class="text-sm font-medium text-slate-600">Certification</span>
+                  </div>
+                  <span class="text-sm font-bold text-green-600">1.0 AMA PRA / CE</span>
+                </div>
+              </div>
+
+              <button class="w-full mt-8 bg-blue-600 text-white font-bold py-4 rounded-xl hover:bg-blue-700 transition-colors shadow-lg shadow-blue-200 flex items-center justify-center gap-2"
+                      onclick="showSection('module1')">
+                Start Training
+                <span class="material-symbols-outlined">arrow_forward</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="content-section p-8 max-w-5xl mx-auto hidden" id="module1">
+        <div class="mb-8 flex justify-between items-end">
+          <div>
+            <span class="text-blue-600 font-bold uppercase tracking-widest text-xs">Section 1</span>
+            <h2 class="text-3xl font-black text-slate-900">Proactive Treatment &amp; Guidelines</h2>
+          </div>
+          <div class="bg-blue-100 text-blue-700 px-4 py-2 rounded-xl text-sm font-bold flex items-center gap-2">
+            <span class="material-symbols-outlined text-lg">psychology</span>
+            The Evidence Gap
+          </div>
+        </div>
+
+        <div class="grid md:grid-cols-2 gap-8 mb-12">
+          <div class="bg-white p-8 rounded-3xl shadow-sm border border-slate-200">
+            <h3 class="text-xl font-bold text-slate-800 mb-4">Why Early Initiation?</h3>
+            <p class="text-slate-600 leading-relaxed mb-6">
+              Schizophrenia leads to an average of <strong class="text-blue-600">28.5 years of life lost</strong> per patient.
+              Real-world data shows a <strong class="text-green-600">20-30% reduction in hospitalizations</strong> when using LAIs early,
+              including following the first episode of psychosis.
+            </p>
+            <div class="bg-blue-50 border-l-4 border-blue-500 p-4 mb-6">
+              <p class="italic text-sm text-blue-800">
+                "Traditional RCTs often underestimate the real-world advantage of LAIs because they artificially increase adherence in the oral control groups."
+              </p>
+              <p class="text-xs font-bold text-blue-600 mt-2">— Dr. Christoph Correll</p>
+            </div>
+          </div>
+
+          <div class="rounded-3xl overflow-hidden shadow-lg">
+            <img class="w-full h-full object-cover" src="Brain.png" alt="Brain visual"
+                 loading="lazy" decoding="async"
+                 onerror="this.onerror=null; this.src=window.__missingImgSvg('Missing: Brain.png');"/>
+          </div>
+        </div>
+
+        <h3 class="text-2xl font-bold text-slate-800 mb-6">Key Guideline Recommendations</h3>
+        <div class="grid md:grid-cols-3 gap-6 mb-12">
+          <div class="bg-white p-6 rounded-2xl border-t-4 border-blue-500 shadow-sm">
+            <span class="material-symbols-outlined text-blue-500 mb-2">fast_forward</span>
+            <h4 class="font-bold text-slate-800">Early Intervention</h4>
+            <p class="text-xs text-slate-500 mt-2">APA/AAPP guidelines recommend LAI initiation even after the first psychotic episode to protect neural tissue.</p>
+          </div>
+          <div class="bg-white p-6 rounded-2xl border-t-4 border-green-500 shadow-sm">
+            <span class="material-symbols-outlined text-green-500 mb-2">trending_down</span>
+            <h4 class="font-bold text-slate-800">Relapse Prevention</h4>
+            <p class="text-xs text-slate-500 mt-2">LAIs prevent the "compounding effects" of repeated relapses and subsequent functional decline.</p>
+          </div>
+          <div class="bg-white p-6 rounded-2xl border-t-4 border-orange-500 shadow-sm">
+            <span class="material-symbols-outlined text-orange-500 mb-2">track_changes</span>
+            <h4 class="font-bold text-slate-800">Monotherapy Goal</h4>
+            <p class="text-xs text-slate-500 mt-2">The goal should be full transition to LAI monotherapy, moving away from reactive "reserved for failure" models.</p>
+          </div>
+        </div>
+
+        <div class="bg-slate-900 text-white p-8 rounded-3xl flex flex-col md:flex-row gap-8 items-center">
+          <div class="flex-1">
+            <h3 class="text-2xl font-bold mb-4">The "Wait &amp; See" Myth</h3>
+            <p class="text-slate-400 text-sm mb-6">
+              Electronic monitoring suggests oral adherence is only 40-50%, while clinicians often overestimate it at 74%.
+              This discrepancy fuels the persistent underutilization of LAIs.
+            </p>
+            <div class="grid grid-cols-2 gap-4">
+              <div class="p-4 bg-white/5 rounded-2xl border border-white/10">
+                <p class="text-3xl font-black text-blue-400">74%</p>
+                <p class="text-[10px] uppercase font-bold text-slate-500">Perceived Adherence</p>
+              </div>
+              <div class="p-4 bg-white/5 rounded-2xl border border-white/10">
+                <p class="text-3xl font-black text-orange-400">40%</p>
+                <p class="text-[10px] uppercase font-bold text-slate-500">Actual Adherence</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="w-full md:w-64">
+            <img class="rounded-2xl w-full border border-white/10" src="needle.png" alt="Injection needle"
+                 loading="lazy" decoding="async"
+                 onerror="this.onerror=null; this.src=window.__missingImgSvg('Missing: needle.png');"/>
+          </div>
+        </div>
+
+        <div class="mt-12 flex justify-end">
+          <button class="bg-blue-600 text-white font-bold px-8 py-3 rounded-xl flex items-center gap-2 hover:bg-blue-700"
+                  onclick="showSection('module2')">
+            Next: Shared Decision-Making
+            <span class="material-symbols-outlined">arrow_forward</span>
+          </button>
+        </div>
+      </section>
+
+      <section class="content-section p-8 max-w-5xl mx-auto hidden" id="module2">
+        <div class="mb-8">
+          <span class="text-green-600 font-bold uppercase tracking-widest text-xs">Section 2</span>
+          <h2 class="text-3xl font-black text-slate-900">The Perception Gap: Shared Decision-Making</h2>
+        </div>
+
+        <div class="grid md:grid-cols-2 gap-12 items-center mb-12">
+          <img class="rounded-3xl shadow-xl border border-slate-200"
+               src="man woman.png" alt="Clinician and patient conversation"
+               loading="lazy" decoding="async"
+               onerror="this.onerror=null; this.src=window.__missingImgSvg('Missing: man woman.png');"/>
+
+          <div>
+            <h3 class="text-2xl font-bold text-slate-800 mb-4">Reframing the Conversation</h3>
+            <p class="text-slate-600 mb-6">
+              Shared decision-making (SDM) shifts the conversation from <strong class="text-blue-600">"Compliance"</strong>
+              to achieving <strong class="text-green-600">Patient-Centered Goals</strong> like stability, lifestyle convenience, and autonomy.
+            </p>
+
+            <div class="space-y-4">
+              <div class="flex items-center gap-4 p-4 bg-white rounded-2xl border border-slate-200 shadow-sm">
+                <span class="material-symbols-outlined text-blue-500 bg-blue-50 p-2 rounded-lg">forum</span>
+                <div>
+                  <p class="font-bold text-slate-800">Neutral Framing</p>
+                  <p class="text-xs text-slate-500">Present LAIs as a choice, not a punishment for "failing" pills.</p>
+                </div>
+              </div>
+
+              <div class="flex items-center gap-4 p-4 bg-white rounded-2xl border border-slate-200 shadow-sm">
+                <span class="material-symbols-outlined text-green-500 bg-green-50 p-2 rounded-lg">volunteer_activism</span>
+                <div>
+                  <p class="font-bold text-slate-800">90% Acceptance Rate</p>
+                  <p class="text-xs text-slate-500">With SDM training, patient acceptance jumps from 15% to 90%.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="bg-white p-8 rounded-3xl border border-slate-200 shadow-sm mb-12">
+          <h3 class="text-xl font-bold mb-6">Patient Preferences: Reality vs. Perception</h3>
+
+          <div class="grid md:grid-cols-2 gap-8">
+            <div class="p-6 bg-red-50 rounded-2xl border border-red-100">
+              <p class="text-red-800 font-bold mb-2">Clinician Misperception</p>
+              <p class="text-sm text-red-700 italic">"Patients will feel coerced if I suggest an injection. They prefer the control of taking a daily pill."</p>
+            </div>
+
+            <div class="p-6 bg-green-50 rounded-2xl border border-green-100">
+              <p class="text-green-800 font-bold mb-2">Patient Reality</p>
+              <p class="text-sm text-green-700 italic">"I value the freedom from the daily reminder of my illness. The injection gives me more autonomy."</p>
+            </div>
+          </div>
+
+          <div class="mt-8 p-6 bg-blue-50 rounded-2xl flex items-center gap-6">
+            <div class="text-center">
+              <p class="text-3xl font-black text-blue-600">77%</p>
+              <p class="text-[10px] font-bold text-blue-400 uppercase">Preference</p>
+            </div>
+            <p class="text-sm text-blue-800 font-medium">of patients surveyed report preferring LAIs over oral administration when benefits are collaboratively explained.</p>
+          </div>
+        </div>
+
+        <div class="flex justify-between items-center bg-slate-100 p-6 rounded-2xl">
+          <button class="text-slate-600 font-bold flex items-center gap-2 hover:text-slate-900" onclick="showSection('module1')">
+            <span class="material-symbols-outlined">arrow_back</span>
+            Back
+          </button>
+
+          <button class="bg-blue-600 text-white font-bold px-8 py-3 rounded-xl flex items-center gap-2 hover:bg-blue-700"
+                  onclick="showSection('module3')">
+            Next: Clinic Logistics
+            <span class="material-symbols-outlined">arrow_forward</span>
+          </button>
+        </div>
+      </section>
+
+      <section class="content-section p-8 max-w-5xl mx-auto hidden" id="module3">
+        <div class="mb-8">
+          <span class="text-orange-600 font-bold uppercase tracking-widest text-xs">Section 3</span>
+          <h2 class="text-3xl font-black text-slate-900">Clinic Logistics &amp; Transition Protocols</h2>
+        </div>
+
+        <div class="grid md:grid-cols-2 gap-8 mb-12">
+          <div class="space-y-6">
+            <div class="bg-white p-6 rounded-3xl border border-slate-200 shadow-sm">
+              <h3 class="font-bold text-slate-800 mb-4 flex items-center gap-2">
+                <span class="material-symbols-outlined text-orange-500">inventory_2</span>
+                Inventory &amp; Storage
+              </h3>
+              <ul class="space-y-3 text-sm text-slate-600">
+                <li class="flex items-center gap-2"><span class="material-symbols-outlined text-slate-400 text-sm">check_circle</span> Refrigeration requirements &amp; temp logs</li>
+                <li class="flex items-center gap-2"><span class="material-symbols-outlined text-slate-400 text-sm">check_circle</span> Stocking levels and ordering schedules</li>
+                <li class="flex items-center gap-2"><span class="material-symbols-outlined text-slate-400 text-sm">check_circle</span> Disposal of sharps and biohazards</li>
+              </ul>
+            </div>
+
+            <div class="bg-white p-6 rounded-3xl border border-slate-200 shadow-sm">
+              <h3 class="font-bold text-slate-800 mb-4 flex items-center gap-2">
+                <span class="material-symbols-outlined text-blue-500">assignment_turned_in</span>
+                Administrative Support
+              </h3>
+              <ul class="space-y-3 text-sm text-slate-600">
+                <li class="flex items-center gap-2"><span class="material-symbols-outlined text-slate-400 text-sm">check_circle</span> Insurance &amp; Prior Authorization support</li>
+                <li class="flex items-center gap-2"><span class="material-symbols-outlined text-slate-400 text-sm">check_circle</span> Appointment scheduling (The "Injection Day" model)</li>
+                <li class="flex items-center gap-2"><span class="material-symbols-outlined text-slate-400 text-sm">check_circle</span> Tracking and monitoring patient follow-ups</li>
+              </ul>
+            </div>
+          </div>
+
+          <img class="rounded-3xl shadow-xl h-full object-cover"
+               src="fridge.png" alt="Medication refrigerator"
+               loading="lazy" decoding="async"
+               onerror="this.onerror=null; this.src=window.__missingImgSvg('Missing: fridge.png');"/>
+        </div>
+
+        <div class="bg-blue-900 text-white p-10 rounded-3xl mb-12">
+          <h3 class="text-2xl font-black mb-6">Transitioning Safely: The Critical Window</h3>
+          <p class="text-blue-100 mb-8">Up to <strong class="text-white">80% of patients</strong> experience medication discrepancies upon hospital discharge. Bridging the transition from inpatient to community care is vital.</p>
+
+          <div class="grid md:grid-cols-2 gap-8">
+            <div class="bg-white/10 p-6 rounded-2xl">
+              <h4 class="font-bold text-blue-300 mb-2 uppercase text-xs tracking-widest">Protocol 1</h4>
+              <p class="font-bold mb-2">Oral Overlap &amp; Loading</p>
+              <p class="text-xs text-blue-100">Each LAI has a specific overlap period (0 to 21 days). Maintenance doses must align with pharmacokinetic steady-state goals.</p>
+            </div>
+
+            <div class="bg-white/10 p-6 rounded-2xl">
+              <h4 class="font-bold text-orange-300 mb-2 uppercase text-xs tracking-widest">Avoid</h4>
+              <p class="font-bold mb-2">The Polypharmacy Paradox</p>
+              <p class="text-xs text-blue-100">Indefinite maintenance of oral antipsychotics (OAs) after LAI steady-state increases rehospitalization risk by 49%.</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="flex justify-center">
+          <button class="bg-blue-600 text-white font-black px-12 py-5 rounded-full flex items-center gap-3 hover:scale-105 transition-all shadow-2xl shadow-blue-400"
+                  onclick="showSection('module4')"> Next: Knowledge Check
+            <span class="material-symbols-outlined text-3xl">arrow_forward</span>
+          </button>
+        </div>
+      </section>
+
+      <section class="content-section p-8 max-w-5xl mx-auto hidden" id="module4">
+        <div class="mb-8">
+          <span class="text-purple-600 font-bold uppercase tracking-widest text-xs">Section 4</span>
+          <h2 class="text-3xl font-black text-slate-900">Knowledge Check</h2>
+        </div>
+
+        <div class="bg-white rounded-3xl p-10 shadow-xl border border-slate-200 mb-12">
+          <div class="flex items-center justify-between mb-6">
+            <h3 class="text-2xl font-black text-slate-900 flex items-center gap-2">
+              <span class="material-symbols-outlined text-blue-500">quiz</span>
+              Final Review
+            </h3>
+            <span class="text-xs uppercase font-bold text-blue-500 bg-blue-50 px-3 py-1 rounded-full">
+              Core Curriculum
+            </span>
+          </div>
+
+          <p class="text-slate-500 mb-8">
+            Test your understanding of early LAI guideline recommendations before moving to the simulation.
+          </p>
+
+          <div id="quiz-container">
+            <div class="quiz-step" data-step="1">
+              <h4 class="text-lg font-bold text-slate-800 mb-6">
+                1. Which patient population do current guidelines explicitly recommend for early LAI initiation?
+              </h4>
+
+              <div class="space-y-4">
+                <button class="w-full text-left p-4 rounded-2xl border-2 border-slate-100 hover:border-blue-500 transition-all font-medium"
+                        onclick="checkAnswer(1, 'A', this)">
+                  A. Only patients who have failed at least 3 oral agents.
+                </button>
+
+                <button class="w-full text-left p-4 rounded-2xl border-2 border-slate-100 hover:border-blue-500 transition-all font-medium"
+                        onclick="checkAnswer(1, 'B', this)">
+                  B. Patients following their first episode of psychosis.
+                </button>
+
+                <button class="w-full text-left p-4 rounded-2xl border-2 border-slate-100 hover:border-blue-500 transition-all font-medium"
+                        onclick="checkAnswer(1, 'C', this)">
+                  C. Only patients currently under involuntary hospitalization.
+                </button>
+              </div>
+            </div>
+
+            <div class="mt-8 p-6 rounded-2xl border hidden" id="quiz-feedback">
+              <p class="text-sm font-bold" id="feedback-text"></p>
+            </div>
+          </div>
+        </div>
+
+        <div class="flex justify-center">
+          <button class="bg-blue-600 text-white font-black px-12 py-5 rounded-full flex items-center gap-3 hover:scale-105 transition-all shadow-2xl shadow-blue-400"
+                  onclick="showSection('simulation')">
+            <span class="material-symbols-outlined text-3xl">3d_rotation</span>
+            Enter Virtual Injection Lab
+          </button>
+        </div>
+      </section>
+
+      <section class="content-section p-8 h-full flex flex-col hidden" id="simulation">
+        <div class="mb-6 flex items-center justify-between">
+          <div>
+            <h2 class="text-3xl font-black text-slate-900">Virtual Injection Trainer</h2>
+            <p class="text-slate-500 text-sm">Practice identifying landmarks and administering gluteal/Ventrogluteal/deltoid injections.</p>
+          </div>
+          <div class="bg-slate-100 px-4 py-2 rounded-xl text-xs font-bold text-slate-500 uppercase" id="sim-status">
+            Select an Injection Site to Begin
+          </div>
+        </div>
+
+        <div class="flex-1 bg-slate-900 rounded-3xl overflow-hidden relative border-4 border-slate-800 shadow-2xl flex">
+          <div class="w-64 bg-slate-800 p-6 flex flex-col gap-4 border-r border-slate-700">
+            <button class="sim-site-btn p-4 rounded-2xl border-2 border-slate-700 text-slate-400 hover:border-blue-500 transition-all flex flex-col items-center gap-2 group"
+                    onclick="setSimSite('Ventrogluteal', this)">
+              <span class="material-symbols-outlined text-3xl">accessibility</span>
+              <span class="font-bold text-xs uppercase">Ventrogluteal</span>
+            </button>
+
+            <button class="sim-site-btn p-4 rounded-2xl border-2 border-slate-700 text-slate-400 hover:border-blue-500 transition-all flex flex-col items-center gap-2 group"
+                    onclick="setSimSite('gluteal', this)">
+              <span class="material-symbols-outlined text-3xl">syringe</span>
+              <span class="font-bold text-xs uppercase">SUBQ</span>
+            </button>
+
+            <button class="sim-site-btn p-4 rounded-2xl border-2 border-slate-700 text-slate-400 hover:border-blue-500 transition-all flex flex-col items-center gap-2 group"
+                    onclick="setSimSite('dorsal', this)">
+              <span class="material-symbols-outlined text-3xl">back_hand</span>
+              <span class="font-bold text-xs uppercase">Dorsogluteal</span>
+            </button>
+
+            <button class="sim-site-btn p-4 rounded-2xl border-2 border-slate-700 text-slate-400 hover:border-blue-500 transition-all flex flex-col items-center gap-2 group"
+                    onclick="setSimSite('deltoid', this)">
+              <span class="material-symbols-outlined text-3xl">front_hand</span>
+              <span class="font-bold text-xs uppercase">Deltoid</span>
+            </button>
+          </div>
+
+          <div class="flex-1 relative flex items-center justify-start p-8">
+            <div class="relative w-full h-full flex items-center justify-center" id="sim-view">
+              <div class="text-slate-500 text-center">
+                <span class="material-symbols-outlined text-6xl mb-4 block">touch_app</span>
+                <p class="font-bold">Choose an injection site on the left</p>
+              </div>
+            </div>
+
+            <div class="absolute bottom-8 flex gap-4 hidden" id="sim-actions">
+              <button class="bg-white/10 hover:bg-white/20 text-white px-6 py-3 rounded-full font-bold text-sm flex items-center gap-2 border border-white/20"
+                      onclick="simAction('clean')">
+                <span class="material-symbols-outlined">cleaning_services</span> Clean Area
+              </button>
+
+              <button class="bg-white/10 hover:bg-white/20 text-white px-6 py-3 rounded-full font-bold text-sm flex items-center gap-2 border border-white/20"
+                      onclick="simAction('locate')">
+                <span class="material-symbols-outlined">my_location</span> Find Landmark
+              </button>
+
+              <button class="bg-blue-600 hover:bg-blue-500 text-white px-8 py-3 rounded-full font-bold text-sm flex items-center gap-2 shadow-xl shadow-blue-500/20 opacity-50 cursor-not-allowed"
+                      id="inject-btn" onclick="simAction('inject')">
+                <span class="material-symbols-outlined">vaccines</span> Administer Dose
+              </button>
+            </div>
+          </div>
+
+          <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-blue-600 text-white px-8 py-4 rounded-2xl font-bold shadow-2xl transition-all scale-0 opacity-0 z-50"
+               id="sim-msg">
+            Perfect Location!
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <div class="fixed inset-0 z-[100] hidden flex items-center justify-center p-6 sm:p-12" id="resourceOverlay">
+    <div class="absolute inset-0 bg-slate-900/60 backdrop-blur-sm" onclick="toggleResources()"></div>
+
+    <div class="relative bg-white w-full max-w-4xl rounded-3xl shadow-2xl overflow-hidden flex flex-col max-h-full">
+      <div class="p-6 bg-blue-600 text-white flex justify-between items-center">
+        <h2 class="text-xl font-bold">Clinical Resources</h2>
+        <button class="material-symbols-outlined hover:bg-white/20 p-2 rounded-full" onclick="toggleResources()">close</button>
+      </div>
+
+      <div class="p-8 overflow-y-auto grid md:grid-cols-2 gap-8">
+        <div>
+          <h3 class="font-bold text-slate-800 mb-4 border-b pb-2">Guidelines &amp; Protocols</h3>
+          <ul class="space-y-4">
+            <li class="flex items-start gap-3">
+              <span class="material-symbols-outlined text-blue-500">picture_as_pdf</span>
+              <div>
+                <p class="text-sm font-bold">APA Practice Guidelines</p>
+                <p class="text-xs text-slate-500">Comprehensive treatment for patients with schizophrenia.</p>
+              </div>
+            </li>
+
+            <li class="flex items-start gap-3">
+              <span class="material-symbols-outlined text-blue-500">inventory</span>
+              <div>
+                <p class="text-sm font-bold">Clinic Storage Checklist</p>
+                <p class="text-xs text-slate-500">Refrigeration, logging, and injection suite setup.</p>
+              </div>
+            </li>
+          </ul>
+        </div>
+
+        <div>
+          <h3 class="font-bold text-slate-800 mb-4 border-b pb-2">Patient Materials</h3>
+          <ul class="space-y-4">
+            <li class="flex items-start gap-3">
+              <span class="material-symbols-outlined text-green-500">fact_check</span>
+              <div>
+                <p class="text-sm font-bold">Shared Decision-Making Guide</p>
+                <p class="text-xs text-slate-500">Tool for clinicians to frame LAI discussions collaboratively.</p>
+              </div>
+            </li>
+
+            <li class="flex items-start gap-3">
+              <span class="material-symbols-outlined text-green-500">family_restroom</span>
+              <div>
+                <p class="text-sm font-bold">Caregiver Educational Handout</p>
+                <p class="text-xs text-slate-500">Understanding long-term outcomes and reduced relapse.</p>
+              </div>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Lightweight inline placeholder for missing images (prevents broken UI)
+    window.__missingImgSvg = (label) => {
+      const svg = `
+        <svg xmlns="http://www.w3.org/2000/svg" width="1200" height="675">
+          <defs>
+            <linearGradient id="g" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0" stop-color="#0f172a"/>
+              <stop offset="1" stop-color="#1e293b"/>
+            </linearGradient>
+          </defs>
+          <rect width="100%" height="100%" fill="url(#g)"/>
+          <text x="50%" y="50%" fill="#e2e8f0" font-family="Inter, Arial" font-size="28" text-anchor="middle">
+            ${String(label).replace(/</g,'&lt;').replace(/>/g,'&gt;')}
+          </text>
+        </svg>`;
+      return "data:image/svg+xml;charset=UTF-8," + encodeURIComponent(svg);
+    };
+
+    // UPDATED SECTIONS LIST
+    const sections = ['intro', 'module1', 'module2', 'module3', 'module4', 'simulation'];
+    let currentSection = 'intro';
+
+    let simulationState = {
+      site: null,
+      cleaned: false,
+      located: false
+    };
+
+    function showSection(id) {
+      sections.forEach(s => {
+        document.getElementById(s).classList.add('hidden');
+        const btn = document.getElementById('btn-' + s);
+        if (btn) btn.classList.remove('bg-blue-50', 'text-blue-700', 'shadow-sm', 'border', 'border-blue-100');
+      });
+
+      document.getElementById(id).classList.remove('hidden');
+      const activeBtn = document.getElementById('btn-' + id);
+      if (activeBtn) activeBtn.classList.add('bg-blue-50', 'text-blue-700', 'shadow-sm', 'border', 'border-blue-100');
+
+      currentSection = id;
+      updateProgress();
+    }
+
+    function updateProgress() {
+      const idx = sections.indexOf(currentSection);
+      const progress = ((idx + 1) / sections.length) * 100;
+      document.getElementById('progressBar').style.width = progress + '%';
+      const pt = document.getElementById('progressText');
+      if (pt) pt.innerText = Math.round(progress) + '%';
+    }
+
+    function toggleResources() {
+      const overlay = document.getElementById('resourceOverlay');
+      overlay.classList.toggle('hidden');
+    }
+
+    // --- Draggable Injection Marker (mouse + touch) ---
+    function enableMarkerDrag() {
+      const marker = document.getElementById('target-point');
+      const container = marker?.parentElement;
+      if (!marker || !container) return;
+
+      let dragging = false;
+
+      const startDrag = (e) => {
+        dragging = true;
+        marker.classList.add('scale-110');
+        e.preventDefault();
+      };
+
+      const endDrag = () => {
+        dragging = false;
+        marker.classList.remove('scale-110');
+      };
+
+      const onDrag = (e) => {
+        if (!dragging) return;
+
+        const rect = container.getBoundingClientRect();
+        const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+        const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+
+        let x = clientX - rect.left;
+        let y = clientY - rect.top;
+
+        x = Math.max(0, Math.min(x, rect.width));
+        y = Math.max(0, Math.min(y, rect.height));
+
+        marker.style.left = `${(x / rect.width) * 100}%`;
+        marker.style.top  = `${(y / rect.height) * 100}%`;
+      };
+
+      marker.addEventListener('mousedown', startDrag);
+      marker.addEventListener('touchstart', startDrag, { passive: false });
+
+      window.addEventListener('mousemove', onDrag);
+      window.addEventListener('touchmove', onDrag, { passive: false });
+
+      window.addEventListener('mouseup', endDrag);
+      window.addEventListener('touchend', endDrag);
+    }
+
+    function setSimSite(site, btnEl) {
+      simulationState = { site, cleaned: false, located: false };
+
+      const view = document.getElementById('sim-view');
+      document.getElementById('sim-actions').classList.remove('hidden');
+      document.getElementById('sim-status').innerText = 'Phase 1: Preparation Needed';
+      document.getElementById('inject-btn').classList.add('opacity-50', 'cursor-not-allowed');
+
+      // Choose image per site (set these filenames to match your actual assets)
+      const simImage =
+        site === 'Ventrogluteal'
+          ? 'muscles.png'
+          : (site === 'gluteal'
+              ? 'ventrogluteal.png'
+              : (site === 'dorsal'
+                  ? 'dorsogluteal.png'
+                  : (site === 'deltoid' ? 'deltoid.png' : '')));
+
+      const landmarkLabel =
+        site === 'Ventrogluteal'
+          ? 'Acromion Process'
+          : (site === 'dorsal'
+              ? 'Sciatic Nerve Avoid Zone'
+              : (site === 'deltoid' ? 'Acromion Process & Axillary Nerve' : 'Ventrogluteal Safe Zone'));
+
+      view.innerHTML = `
+        <div class="relative w-full h-full">
+          <img src="${simImage}"
+               class="w-full h-full object-contain opacity-90"
+               alt="Injection anatomy diagram"
+               loading="lazy" decoding="async"
+               onerror="this.onerror=null; this.src=window.__missingImgSvg('Missing: ${simImage}');" />
+          <div id="target-point"
+               class="absolute w-12 h-12 border-4 border-dashed border-white/40 rounded-full cursor-crosshair hover:border-blue-500 flex items-center justify-center"
+               style="top: 40%; left: 50%;">
+            <span class="material-symbols-outlined text-white/25">close</span>
+          </div>
+          <div id="landmark-guide" class="absolute inset-0 pointer-events-none opacity-0 transition-opacity">
+            <div class="absolute bg-green-500/20 border border-green-500/50 rounded-xl px-2 py-1 text-[10px] text-white"
+                 style="top: 24%; left: 44%;">${landmarkLabel}</div>
+          </div>
+        </div>
+      `;
+
+      setTimeout(enableMarkerDrag, 50);
+
+      document.querySelectorAll('.sim-site-btn').forEach(b => b.classList.remove('border-blue-500', 'bg-slate-700/50'));
+      if (btnEl) btnEl.classList.add('border-blue-500', 'bg-slate-700/50');
+    }
+
+    function simAction(action) {
+      if (!simulationState.site) return;
+
+      const status = document.getElementById('sim-status');
+
+      if (action === 'clean') {
+        simulationState.cleaned = true;
+        showSimMsg("Site Sanitized", "bg-green-600");
+        status.innerText = 'Phase 2: Locate Landmark';
+      } else if (action === 'locate') {
+        if (!simulationState.cleaned) return showSimMsg("Clean site first!", "bg-orange-600");
+        simulationState.located = true;
+        const guide = document.getElementById('landmark-guide');
+        if (guide) guide.classList.remove('opacity-0');
+        showSimMsg("Landmark Identified", "bg-blue-600");
+        status.innerText = 'Phase 3: Ready for Injection';
+        document.getElementById('inject-btn').classList.remove('opacity-50', 'cursor-not-allowed');
+      } else if (action === 'inject') {
+        if (!simulationState.located) return;
+        showSimMsg("Injection Successful!", "bg-indigo-600");
+        status.innerText = 'Procedure Complete';
+
+        const view = document.getElementById('sim-view');
+        view.classList.add('brightness-150');
+        setTimeout(() => view.classList.remove('brightness-150'), 200);
+      }
+    }
+
+    function showSimMsg(text, color) {
+      const msg = document.getElementById('sim-msg');
+      msg.innerText = text;
+      msg.className = `absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 ${color} text-white px-8 py-4 rounded-2xl font-bold shadow-2xl transition-all scale-100 opacity-100 z-50`;
+      setTimeout(() => {
+        msg.classList.add('scale-0', 'opacity-0');
+      }, 1500);
+    }
+
+    // --- Quiz Logic ---
+    function checkAnswer(step, choice, btn) {
+      const feedback = document.getElementById('quiz-feedback');
+      const feedbackText = document.getElementById('feedback-text');
+
+      // For demo, correct answer is B
+      if (choice === 'B') {
+        btn.classList.add('bg-green-100', 'border-green-500', 'text-green-700');
+        feedback.classList.remove('hidden', 'bg-red-50', 'border-red-200');
+        feedback.classList.add('bg-green-50', 'border-green-200');
+        feedbackText.innerText = "Correct! Current guidelines recommend early initiation even after the first episode to protect neuroplasticity and prevent functional decline.";
+      } else {
+        btn.classList.add('bg-red-100', 'border-red-500', 'text-red-700');
+        feedback.classList.remove('hidden', 'bg-green-50', 'border-green-200');
+        feedback.classList.add('bg-red-50', 'border-red-200');
+        feedbackText.innerText = "Not quite. Remember, the 'Reaction Gap' occurs because clinicians often wait too long. Guidelines favor early intervention.";
+      }
+    }
+
+    // Initial Progress
+    updateProgress();
+  </script>
+</body>
+</html>
