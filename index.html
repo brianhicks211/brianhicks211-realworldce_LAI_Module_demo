@@ -5,155 +5,230 @@
   <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
   <title>Getting to the Point: LAI Learning Module</title>
   <script src="https://cdn.tailwindcss.com"></script>
-  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,1,0&family=JetBrains+Mono:wght@400;700" rel="stylesheet"/>
-
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,1,0&family=JetBrains+Mono:wght@400;700&family=Inter:wght@300;400;600;700;800;900" rel="stylesheet"/>
   <style>
-    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap');
-    body { font-family: 'Inter', sans-serif; }
-
+    :root {
+      --panel: rgba(255, 255, 255, 0.74);
+      --panel-strong: rgba(255, 255, 255, 0.90);
+      --shadow: 0 20px 60px rgba(2, 6, 23, 0.18);
+      --glass-blur: blur(22px);
+      --radius-xl: 28px;
+    }
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: 'Inter', sans-serif;
+      min-height: 100vh;
+      color: #0f172a;
+      background:
+        radial-gradient(circle at 8% 10%, rgba(56, 189, 248, 0.16), transparent 24%),
+        radial-gradient(circle at 86% 12%, rgba(79, 70, 229, 0.18), transparent 26%),
+        radial-gradient(circle at 50% 100%, rgba(37, 99, 235, 0.10), transparent 34%),
+        linear-gradient(180deg, #f8fbff 0%, #f4f8ff 40%, #eef4fb 100%);
+      overflow: hidden;
+    }
+    .bg-orbs { position: fixed; inset: 0; pointer-events: none; z-index: 0; overflow: hidden; }
+    .orb { position: absolute; border-radius: 999px; filter: blur(80px); opacity: 0.35; animation: floatOrb 16s ease-in-out infinite; mix-blend-mode: screen; }
+    .orb.one { width: 22rem; height: 22rem; left: -4rem; top: -3rem; background: rgba(56, 189, 248, 0.42); }
+    .orb.two { width: 24rem; height: 24rem; right: -8rem; top: 6rem; background: rgba(99, 102, 241, 0.32); animation-delay: -5s; }
+    .orb.three { width: 20rem; height: 20rem; left: 24%; bottom: -8rem; background: rgba(37, 99, 235, 0.24); animation-delay: -9s; }
+    @keyframes floatOrb { 0%, 100% { transform: translate3d(0, 0, 0) scale(1); } 50% { transform: translate3d(0, -18px, 0) scale(1.06); } }
+    .glass-shell { position: relative; z-index: 1; background: rgba(255,255,255,0.46); backdrop-filter: blur(8px); }
+    .glass-header { background: rgba(255,255,255,0.72); backdrop-filter: var(--glass-blur); border-bottom: 1px solid rgba(255,255,255,0.72); box-shadow: 0 10px 30px rgba(15, 23, 42, 0.06); }
+    .sidebar-shell { background: linear-gradient(180deg, rgba(255,255,255,0.76) 0%, rgba(255,255,255,0.90) 100%); backdrop-filter: var(--glass-blur); border-right: 1px solid rgba(226,232,240,0.88); box-shadow: 20px 0 40px rgba(15, 23, 42, 0.04); }
+    .soft-panel { background: var(--panel); backdrop-filter: var(--glass-blur); border: 1px solid rgba(255,255,255,0.78); box-shadow: var(--shadow); }
+    .soft-panel-strong { background: var(--panel-strong); border: 1px solid rgba(226, 232, 240, 0.88); box-shadow: 0 18px 40px rgba(15, 23, 42, 0.08); }
+    .section-card { position: relative; overflow: hidden; border-radius: var(--radius-xl); background: rgba(255,255,255,0.84); border: 1px solid rgba(226,232,240,0.9); box-shadow: 0 18px 48px rgba(15, 23, 42, 0.08); backdrop-filter: blur(20px); }
+    .section-card::before { content: ""; position: absolute; inset: 0; background: linear-gradient(180deg, rgba(255,255,255,0.24), rgba(255,255,255,0)); pointer-events: none; }
+    .custom-scrollbar::-webkit-scrollbar, .content-scroll::-webkit-scrollbar { width: 8px; }
+    .custom-scrollbar::-webkit-scrollbar-track, .content-scroll::-webkit-scrollbar-track { background: transparent; }
+    .custom-scrollbar::-webkit-scrollbar-thumb, .content-scroll::-webkit-scrollbar-thumb { background: rgba(148,163,184,0.55); border-radius: 999px; }
+    .content-scroll { scrollbar-width: thin; scrollbar-color: rgba(148,163,184,0.55) transparent; }
+    .fade-in { animation: fadeIn 280ms ease forwards; }
+    .slide-up { animation: slideUp 420ms ease forwards; }
+    .scale-in { animation: scaleIn 220ms ease forwards; }
+    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+    @keyframes slideUp { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: translateY(0); } }
+    @keyframes scaleIn { from { opacity: 0; transform: scale(0.985); } to { opacity: 1; transform: scale(1); } }
+    .pill-stat { display: inline-flex; align-items: center; gap: .45rem; padding: .55rem .8rem; border-radius: 999px; background: rgba(15,23,42,0.04); border: 1px solid rgba(148,163,184,0.14); font-size: .75rem; font-weight: 700; color: #334155; }
+    .nav-progress-track { height: 12px; border-radius: 999px; background: rgba(226, 232, 240, 0.95); overflow: hidden; }
+    .nav-progress-bar { height: 100%; border-radius: 999px; background: linear-gradient(90deg, #2563eb 0%, #4f46e5 100%); box-shadow: inset 0 0 12px rgba(255,255,255,0.26); transition: width 300ms ease; }
+    .nav-card { position: relative; width: 100%; text-align: left; padding: 0.95rem 1rem; border-radius: 22px; border: 1px solid rgba(226, 232, 240, 0.85); background: rgba(255,255,255,0.74); color: #334155; transition: 180ms ease; overflow: hidden; }
+    .nav-card:hover { transform: translateY(-1px); background: rgba(255,255,255,0.92); color: #0f172a; box-shadow: 0 12px 26px rgba(15, 23, 42, 0.08); }
+    .nav-card.active { color: white; border-color: rgba(96, 165, 250, 0.28); background: radial-gradient(circle at 16% 18%, rgba(125, 211, 252, 0.16), transparent 18%), linear-gradient(135deg, #0f172a 0%, #1d4ed8 64%, #4f46e5 100%); box-shadow: 0 16px 36px rgba(37, 99, 235, 0.28); }
+    .nav-card.active::after { content: ""; position: absolute; inset: 0; background: linear-gradient(180deg, rgba(255,255,255,0.12), rgba(255,255,255,0)); pointer-events: none; }
+    .nav-card.active .nav-icon { color: #ffffff !important; opacity: 1; }
+    .header-brand-title { white-space: nowrap; }
+    .header-brand-tagline { white-space: nowrap; }
+    .primary-button, .secondary-button, .ghost-button { border-radius: 16px; font-weight: 700; transition: 180ms ease; display: inline-flex; align-items: center; justify-content: center; gap: .55rem; }
+    .primary-button { background: linear-gradient(135deg, #2563eb 0%, #4f46e5 100%); color: white; box-shadow: 0 16px 28px rgba(37, 99, 235, 0.22); }
+    .primary-button:hover { transform: translateY(-1px); box-shadow: 0 20px 34px rgba(37, 99, 235, 0.28); }
+    .secondary-button { background: linear-gradient(135deg, #16a34a 0%, #22c55e 100%); color: white; box-shadow: 0 16px 28px rgba(22, 163, 74, 0.20); }
+    .secondary-button:hover { transform: translateY(-1px); box-shadow: 0 20px 34px rgba(22, 163, 74, 0.26); }
+    .ghost-button { color: #475569; background: rgba(255,255,255,0.84); border: 1px solid rgba(226,232,240,0.88); }
+    .ghost-button:hover { color: #1d4ed8; border-color: rgba(96,165,250,0.42); background: rgba(255,255,255,0.96); }
+    .mobile-bottom-nav { position: sticky; bottom: 0; z-index: 18; display: none; padding: .9rem 1rem 1.05rem; background: linear-gradient(180deg, rgba(248,251,255,0) 0%, rgba(248,251,255,0.95) 40%, rgba(248,251,255,0.98) 100%); backdrop-filter: blur(16px); }
+    .mobile-bottom-nav .inner { display: grid; grid-template-columns: 1fr auto; gap: .75rem; border-radius: 22px; padding: .8rem; background: rgba(255,255,255,0.82); border: 1px solid rgba(226,232,240,0.88); box-shadow: 0 16px 36px rgba(15,23,42,0.10); }
     .module-card { transition: all 0.3s ease; }
     .module-card:hover { transform: translateY(-5px); box-shadow: 0 10px 20px rgba(0,0,0,0.1); }
-
     .gradient-bg { background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%); }
     .step-active { background-color: #3b82f6; color: white; }
     .step-inactive { background-color: #e5e7eb; color: #6b7280; }
-
     .sim-overlay { background: rgba(0,0,0,0.4); backdrop-filter: blur(4px); }
-
-    .custom-scrollbar::-webkit-scrollbar { width: 6px; }
-    .custom-scrollbar::-webkit-scrollbar-track { background: #f1f1f1; }
-    .custom-scrollbar::-webkit-scrollbar-thumb { background: #3b82f6; border-radius: 10px; }
-
     .info-pill { background: #eff6ff; border: 1px solid #bfdbfe; color: #1e40af; }
-  
-    .bg-medical-blue { background-color: #002147; }
-    .text-medical-blue { color: #002147; }
-    .glass { background: rgba(255, 255, 255, 0.9); backdrop-filter: blur(12px); border-bottom: 1px solid rgba(226, 232, 240, 1); }
-
-</style>
+    .choice-card { position: relative; overflow: hidden; transition: 180ms ease; }
+    .choice-card:hover { transform: translateY(-1px); box-shadow: 0 12px 28px rgba(15, 23, 42, 0.06); }
+    .choice-card::before { content: ""; position: absolute; inset: 0; background: linear-gradient(180deg, rgba(255,255,255,0.28), rgba(255,255,255,0)); pointer-events: none; }
+    .fade-swap { transition: opacity 280ms ease, transform 280ms ease; will-change: opacity, transform; }
+    .swap-hidden { opacity: 0; transform: translateY(6px); pointer-events: none; }
+    .swap-visible { opacity: 1; transform: translateY(0); }
+    .buffering-overlay { position:absolute; inset:0; display:flex; align-items:center; justify-content:center; background:rgba(2,6,23,0.35); backdrop-filter: blur(2px); }
+    .spinner { width:44px; height:44px; border-radius:9999px; border:4px solid rgba(255,255,255,0.25); border-top-color: rgba(255,255,255,0.95); animation: spin 0.9s linear infinite; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .video-shell { position: relative; overflow: hidden; border-radius: 28px; border: 1px solid rgba(226,232,240,0.88); background: #020617; box-shadow: 0 26px 60px rgba(15, 23, 42, 0.18); }
+    .video-overlay-btn { position: absolute; top: 16px; right: 16px; z-index: 12; display: flex; gap: 10px; opacity: 0; transition: opacity 220ms ease; }
+    .video-shell:hover .video-overlay-btn { opacity: 1; }
+    .icon-circle-btn { display: inline-flex; align-items: center; justify-content: center; width: 42px; height: 42px; border-radius: 999px; color: white; border: 1px solid rgba(255,255,255,0.18); background: rgba(15,23,42,0.56); backdrop-filter: blur(12px); box-shadow: 0 10px 24px rgba(2, 6, 23, 0.22); transition: 180ms ease; }
+    .icon-circle-btn:hover { transform: translateY(-1px); background: rgba(37, 99, 235, 0.74); }
+    .tooltip { position: absolute; bottom: -42px; right: 0; opacity: 0; transform: translateY(4px); transition: 180ms ease; pointer-events: none; white-space: nowrap; font-size: .72rem; padding: .35rem .55rem; border-radius: 10px; color: white; background: rgba(15,23,42,0.94); }
+    .icon-wrap:hover .tooltip { opacity: 1; transform: translateY(0); }
+    .poster-stage { position: relative; display: block; width: 100%; overflow: hidden; background: radial-gradient(circle at 18% 20%, rgba(59,130,246,0.26), transparent 20%), radial-gradient(circle at 84% 12%, rgba(147,197,253,0.18), transparent 18%), linear-gradient(135deg, #020617 0%, #0f172a 38%, #1d4ed8 100%); min-height: 360px; }
+    .poster-stage::after { content: ""; position: absolute; inset: 0; background: linear-gradient(180deg, rgba(2,6,23,0.02), rgba(2,6,23,0.48)); pointer-events: none; }
+    .poster-grid { position: absolute; inset: 0; background-image: linear-gradient(rgba(255,255,255,.05) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,.05) 1px, transparent 1px); background-size: 38px 38px; mask-image: linear-gradient(to bottom, rgba(0,0,0,.9), rgba(0,0,0,.18)); pointer-events: none; }
+    .poster-glow { position: absolute; inset: auto auto 20px 20px; display: inline-flex; align-items: center; gap: .45rem; padding: .55rem .75rem; border-radius: 999px; background: rgba(255,255,255,0.12); color: white; border: 1px solid rgba(255,255,255,0.16); backdrop-filter: blur(12px); z-index: 2; }
+    .poster-content { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; padding: 1.5rem; z-index: 2; }
+    .poster-frame { position: relative; border-radius: 28px; padding: .9rem; border: 1px solid rgba(255,255,255,0.12); background: rgba(255,255,255,0.08); box-shadow: 0 18px 60px rgba(2,6,23,0.28); backdrop-filter: blur(12px); max-width: 820px; width: 100%; }
+    .poster-image { display: block; width: 100%; max-height: 360px; object-fit: cover; border-radius: 22px; opacity: .94; }
+    .play-badge { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; pointer-events: none; }
+    .play-core { width: 88px; height: 88px; border-radius: 999px; display: flex; align-items: center; justify-content: center; background: rgba(255,255,255,0.88); color: #0f172a; box-shadow: 0 20px 40px rgba(2,6,23,0.24); border: 1px solid rgba(255,255,255,0.78); }
+    .poster-caption { position: absolute; left: 0; right: 0; bottom: 0; padding: 1.25rem 1.25rem 1.1rem; background: linear-gradient(180deg, rgba(2,6,23,0) 0%, rgba(2,6,23,0.84) 85%); z-index: 2; text-align: left; color: white; }
+    .poster-title { font-size: 1.08rem; font-weight: 700; }
+    .poster-subtitle { margin-top: 0.22rem; font-size: .9rem; color: rgba(255,255,255,0.72); }
+    .video-stage { display: none; background: #020617; }
+    .video-stage.visible { display: block; animation: fadeIn 260ms ease forwards; }
+    .video-meta { display: grid; gap: 1rem; padding: 1.25rem; background: linear-gradient(180deg, rgba(15,23,42,0.98) 0%, rgba(15,23,42,0.92) 100%); color: white; }
+    .progress-shell { width: 100%; height: 8px; border-radius: 999px; background: rgba(148,163,184,0.28); overflow: hidden; }
+    .progress-bar { width: 0%; height: 100%; border-radius: 999px; background: linear-gradient(90deg, #38bdf8 0%, #2563eb 55%, #6366f1 100%); transition: width 120ms linear; }
+    .control-chip { display: inline-flex; align-items: center; gap: .45rem; padding: .55rem .75rem; border-radius: 999px; background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.10); font-size: .78rem; font-weight: 700; color: rgba(255,255,255,0.88); }
+    @media (max-width: 767px) {
+      body { overflow: auto; }
+      #app-shell { display: block; min-height: 100dvh; height: auto; overflow: visible; }
+      #sidebar { position: fixed; inset: 0 auto 0 0; width: min(90vw, 360px); max-width: 90vw; height: 100dvh; }
+      .content-scroll { -webkit-overflow-scrolling: touch; }
+      .header-brand-title { white-space: normal; line-height: 1.05; }
+      .header-brand-tagline { white-space: normal; line-height: 1.25; max-width: 15rem; }
+      .poster-stage { min-height: 260px; }
+      .section-card, .video-shell, .soft-panel, .soft-panel-strong { border-radius: 20px; }
+      .video-overlay-btn { opacity: 1; top: 12px; right: 12px; gap: 8px; }
+      .tooltip { display: none; }
+      .icon-circle-btn { width: 40px; height: 40px; }
+      .mobile-bottom-nav { display: block; padding: .75rem .85rem calc(1rem + env(safe-area-inset-bottom)); }
+      .mobile-bottom-nav .inner { grid-template-columns: 1fr; }
+      .mobile-bottom-nav .inner button { width: 100%; }
+    }
+  </style>
 </head>
-
-<body class="bg-slate-50 text-slate-900 overflow-hidden h-screen flex flex-col">
-  <!--
-    NOTE:
-    Put your transparent Real SIM logo file in the SAME folder as this HTML.
-    Name it: real-sim-logo.png (or change the src below to match your filename).
-  -->
-  
-  <!-- Accredited Header (CMV Style) -->
-  <div class="bg-medical-blue text-white text-[10px] font-bold py-2 px-6 flex justify-between items-center tracking-[0.2em] uppercase">
-    <span>Real World CE: Accredited Clinical Curriculum</span>
-    <span class="flex items-center gap-2">
-      <span class="material-symbols-outlined text-[14px]">verified</span> 1.0 AMA PRA / CE
-    </span>
+<body class="text-slate-900">
+  <div class="bg-orbs" aria-hidden="true">
+    <div class="orb one"></div>
+    <div class="orb two"></div>
+    <div class="orb three"></div>
   </div>
 
-  <!-- Main Navigation (CMV Style) -->
-  <header class="sticky top-0 z-50 glass">
-    <div class="w-full px-3 h-20 flex items-center justify-between">
-      <div class="flex items-center gap-2">
-        <!-- Text Logo -->
-        <div class="flex flex-col leading-tight">
-          <span class="font-extrabold text-2xl tracking-tight text-slate-900 uppercase whitespace-nowrap">
-            REAL WORLD <span class="text-blue-600 inline-block">CE</span>
-          </span>
-          </span>
-          <span class="text-[10px] font-semibold tracking-widest uppercase text-slate-500 mt-1">
-            Featuring:
-            <span class="font-extrabold text-slate-900">REAL </span>
-            <span class="font-extrabold text-blue-600">SIM</span>
-          </span>
+  <div id="app-shell" class="glass-shell h-screen flex overflow-hidden">
+    <aside id="sidebar" class="sidebar-shell w-80 max-w-[88vw] flex-shrink-0 h-full absolute md:relative z-30 -translate-x-full md:translate-x-0 transition-transform duration-300 flex flex-col">
+      <div class="px-5 pt-5 pb-4 border-b border-slate-200/70">
+        <div class="soft-panel rounded-[28px] p-4">
+          <div class="flex items-start justify-between gap-3">
+            <div>
+              <div class="text-xl font-black tracking-tight text-slate-950">Getting to the Point</div>
+              <p class="text-sm text-slate-500 mt-1 leading-relaxed">Evidence, shared decision-making, clinic logistics, and hands-on injection practice inside the Real World CE archetype.</p>
+            </div>
+            <button class="md:hidden text-slate-500 hover:text-slate-900 rounded-xl p-2 hover:bg-slate-100" onclick="toggleSidebar()" aria-label="Close navigation">
+              <span class="material-symbols-outlined">close</span>
+            </button>
+          </div>
+          <div class="mt-4 p-4 rounded-2xl bg-slate-950 text-white shadow-xl shadow-slate-900/15">
+            <div class="flex items-center justify-between gap-3 text-[11px] uppercase tracking-[0.18em] font-bold text-slate-300">
+              <span>Module Progress</span>
+              <span id="sidebar-progress-count">1 of 6</span>
+            </div>
+            <div class="nav-progress-track mt-3">
+              <div id="sidebar-progress-bar" class="nav-progress-bar" style="width: 16.67%;"></div>
+            </div>
+            <div class="mt-3 flex items-center justify-between text-sm">
+              <div class="text-slate-300">Completion</div>
+              <div class="font-extrabold text-white" id="sidebar-progress-label">17%</div>
+            </div>
+          </div>
         </div>
       </div>
 
-      <nav class="hidden lg:flex items-center gap-8">
-        <div class="flex gap-6 text-sm font-semibold text-slate-600">
-          <button class="hover:text-blue-600 transition" onclick="showSection('intro')">Introduction</button>
-          <button class="hover:text-blue-600 transition" onclick="showSection('module1')">Evidence</button>
-          <button class="hover:text-blue-600 transition" onclick="showSection('module2')">SDM</button>
-          <button class="hover:text-blue-600 transition" onclick="showSection('module3')">Logistics</button>
-          <button class="hover:text-blue-600 transition" onclick="showSection('module4')">Knowledge Check</button>
-          <button class="hover:text-blue-600 transition" onclick="showSection('simulation')">Injection Lab</button>
+      <div class="px-4 py-4 flex-1 overflow-y-auto content-scroll">
+        <div class="text-[11px] uppercase tracking-[0.22em] font-bold text-slate-400 px-2 mb-3">Module Navigation</div>
+        <div class="space-y-2">
+          <button class="nav-btn nav-card active" id="btn-intro" onclick="showSection('intro')">
+            <div class="flex items-center gap-3"><span class="material-symbols-outlined nav-icon text-slate-400">home</span><span class="font-bold text-sm">Introduction</span></div>
+          </button>
+          <button class="nav-btn nav-card" id="btn-module1" onclick="showSection('module1')">
+            <div class="flex items-center gap-3"><span class="material-symbols-outlined nav-icon text-slate-400">analytics</span><span class="font-bold text-sm text-left">1. Evidence &amp; Guidelines</span></div>
+          </button>
+          <button class="nav-btn nav-card" id="btn-module2" onclick="showSection('module2')">
+            <div class="flex items-center gap-3"><span class="material-symbols-outlined nav-icon text-slate-400">handshake</span><span class="font-bold text-sm text-left">2. Shared Decision-Making</span></div>
+          </button>
+          <button class="nav-btn nav-card" id="btn-module3" onclick="showSection('module3')">
+            <div class="flex items-center gap-3"><span class="material-symbols-outlined nav-icon text-slate-400">settings_suggest</span><span class="font-bold text-sm text-left">3. Clinic Logistics</span></div>
+          </button>
+          <button class="nav-btn nav-card" id="btn-module4" onclick="showSection('module4')">
+            <div class="flex items-center gap-3"><span class="material-symbols-outlined nav-icon text-slate-400">quiz</span><span class="font-bold text-sm text-left">4. Knowledge Check</span></div>
+          </button>
+          <button class="nav-btn nav-card" id="btn-simulation" onclick="showSection('simulation')">
+            <div class="flex items-center gap-3"><span class="material-symbols-outlined nav-icon text-slate-400">3d_rotation</span><span class="font-bold text-sm text-left">Virtual Injection Lab</span></div>
+          </button>
         </div>
+      </div>
 
-        <div class="h-10 w-px bg-slate-200"></div>
-
-        <div class="flex flex-col items-end">
-          <span class="text-[10px] font-black text-slate-400 uppercase">Mastery Progress</span>
-          <div class="flex items-center gap-3 mt-1">
-            <div class="w-40 h-2 bg-slate-100 rounded-full overflow-hidden border border-slate-200">
-              <div class="h-full bg-blue-600 transition-all duration-500" id="progressBar" style="width: 0%"></div>
-            </div>
-            <span id="progressText" class="text-xs font-bold text-blue-600">0%</span>
-          </div>
-        </div>
-
-        <button class="text-slate-600 hover:text-blue-600 flex items-center gap-1 transition-colors" onclick="toggleResources()">
-          <span class="material-symbols-outlined">library_books</span>
-          <span class="text-sm font-semibold">Resources</span>
-        </button>
-      </nav>
-    </div>
-  </header>
-
-
-  <div class="flex flex-1 overflow-hidden">
-    <aside class="w-72 bg-white border-r border-slate-200 hidden lg:flex flex-col">
-      <nav class="flex-1 p-4 space-y-1 overflow-y-auto custom-scrollbar">
-        <button class="nav-btn w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all hover:bg-slate-50 group active"
-                id="btn-intro" onclick="showSection('intro')">
-          <span class="material-symbols-outlined text-slate-400 group-hover:text-blue-500">home</span>
-          <span class="font-medium text-slate-600 group-hover:text-blue-700">Introduction</span>
-        </button>
-
-        <div class="h-px bg-slate-100 my-2"></div>
-        <h3 class="px-4 text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-2">Core Curriculum</h3>
-
-        <button class="nav-btn w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all hover:bg-slate-50 group"
-                id="btn-module1" onclick="showSection('module1')">
-          <span class="material-symbols-outlined text-slate-400 group-hover:text-blue-500">analytics</span>
-          <span class="font-medium text-slate-600 group-hover:text-blue-700 text-left">1. Evidence &amp; Guidelines</span>
-        </button>
-
-        <button class="nav-btn w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all hover:bg-slate-50 group"
-                id="btn-module2" onclick="showSection('module2')">
-          <span class="material-symbols-outlined text-slate-400 group-hover:text-blue-500">handshake</span>
-          <span class="font-medium text-slate-600 group-hover:text-blue-700 text-left">2. Shared Decision-Making</span>
-        </button>
-
-        <button class="nav-btn w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all hover:bg-slate-50 group"
-                id="btn-module3" onclick="showSection('module3')">
-          <span class="material-symbols-outlined text-slate-400 group-hover:text-blue-500">settings_suggest</span>
-          <span class="font-medium text-slate-600 group-hover:text-blue-700 text-left">3. Clinic Logistics</span>
-        </button>
-
-        <button class="nav-btn w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all hover:bg-slate-50 group"
-                id="btn-module4" onclick="showSection('module4')">
-          <span class="material-symbols-outlined text-slate-400 group-hover:text-blue-500">quiz</span>
-          <span class="font-medium text-slate-600 group-hover:text-blue-700 text-left">4. Knowledge Check</span>
-        </button>
-
-        <div class="h-px bg-slate-100 my-2"></div>
-        <h3 class="px-4 text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-2">Practical Skills</h3>
-
-        <button class="nav-btn w-full flex items-center gap-3 px-4 py-3 rounded-xl bg-blue-50 text-blue-700 shadow-sm border border-blue-100"
-                id="btn-simulation" onclick="showSection('simulation')">
-          <span class="material-symbols-outlined text-blue-500">3d_rotation</span>
-          <span class="font-bold">Virtual Injection Lab</span>
-        </button>
-      </nav>
-
-      <div class="p-4 border-t border-slate-100">
-        <div class="bg-blue-50 p-3 rounded-xl">
-          <p class="text-[10px] font-bold text-blue-800 uppercase mb-1">Upcoming Live Event</p>
-          <p class="text-xs font-semibold text-blue-600">APNA Annual Conference 2026</p>
-          <p class="text-[10px] text-blue-500">Phoenix, AZ | Oct 28-31</p>
+      <div class="p-4 border-t border-slate-200/70">
+        <div class="soft-panel-strong rounded-[22px] p-4">
+          <div class="text-xs uppercase tracking-[0.18em] font-bold text-slate-400">Live Education</div>
+          <div class="mt-2 text-sm font-bold text-slate-900">APNA Annual Conference 2026</div>
+          <div class="text-xs text-slate-500 mt-1">Phoenix, AZ | Oct 28-31</div>
         </div>
       </div>
     </aside>
 
-    <main class="flex-1 overflow-y-auto custom-scrollbar bg-slate-50">
-      <section class="content-section p-8 max-w-5xl mx-auto block" id="intro">
+    <div id="sidebar-overlay" class="fixed inset-0 bg-slate-950/40 backdrop-blur-[2px] hidden z-20 md:hidden" onclick="toggleSidebar()"></div>
+
+    <div class="flex-1 flex flex-col h-full min-w-0 relative z-10">
+      <header class="glass-header sticky top-0 z-20">
+        <div class="px-4 md:px-6 py-3.5 flex items-center justify-between gap-4">
+          <div class="min-w-0 flex items-center gap-3">
+            <button class="md:hidden text-slate-600 hover:text-slate-950 rounded-xl p-2 hover:bg-white/70" onclick="toggleSidebar()" aria-label="Open navigation">
+              <span class="material-symbols-outlined">menu</span>
+            </button>
+            <div class="min-w-0">
+              <div class="header-brand-title text-base sm:text-lg font-black uppercase tracking-tight text-slate-950">REAL WORLD <span class="text-blue-600">CE</span></div>
+              <div class="header-brand-tagline text-[11px] sm:text-xs font-semibold tracking-[0.08em] text-slate-600 mt-1">Bringing the Real World Into Clinical Education</div>
+            </div>
+          </div>
+
+          <div class="hidden xl:flex items-center gap-3 min-w-0">
+            <div class="pill-stat"><span class="material-symbols-outlined text-[16px] text-blue-600">medical_services</span><span>LAI Learning Module</span></div>
+            <div class="pill-stat min-w-0 max-w-[320px]"><span class="material-symbols-outlined text-[16px] text-blue-600">chevron_right</span><span id="breadcrumb-section" class="truncate">Introduction</span></div>
+          </div>
+
+          <div class="hidden md:flex items-center gap-3">
+            <div class="flex items-center gap-3">
+              <div class="w-32 h-2 bg-slate-100 rounded-full overflow-hidden border border-slate-200"><div class="h-full bg-blue-600 transition-all duration-500" id="progressBar" style="width: 0%"></div></div>
+              <span id="progressText" class="text-xs font-bold text-blue-600">0%</span>
+            </div>
+            <button class="ghost-button px-4 py-2 text-sm" onclick="toggleResources()"><span class="material-symbols-outlined text-[18px]">library_books</span>Resources</button>
+          </div>
+        </div>
+      </header>
+
+      <main id="mainScroller" class="flex-1 overflow-y-auto custom-scrollbar px-4 md:px-8 py-5 md:py-8 bg-transparent">
+<section class="content-section p-8 max-w-5xl mx-auto block" id="intro">
         <div class="bg-white rounded-3xl shadow-xl overflow-hidden border border-slate-200">
           <div class="relative h-64">
             <img alt="Healthcare Team" class="w-full h-full object-cover"
@@ -592,7 +667,22 @@
           </div>
         </div>
       </section>
-    </main>
+      </main>
+
+      <div class="px-4 md:px-8 pb-24 md:pb-6">
+        <div class="max-w-4xl mx-auto text-center text-[11px] sm:text-xs tracking-[0.16em] uppercase font-bold text-slate-400">The archetype was created by Real Education LLC</div>
+      </div>
+
+      <div class="mobile-bottom-nav md:hidden">
+        <div class="inner">
+          <div class="min-w-0">
+            <div class="text-[10px] uppercase tracking-[0.18em] font-extrabold text-slate-400">Current Section</div>
+            <div id="mobile-current-section" class="text-sm font-bold text-slate-900 truncate mt-1">Introduction</div>
+          </div>
+          <button onclick="goToNextSection()" class="primary-button px-4 py-3 text-sm">Next<span class="material-symbols-outlined text-[18px]">arrow_forward</span></button>
+        </div>
+      </div>
+    </div>
   </div>
 
   <div class="fixed inset-0 z-[100] hidden flex items-center justify-center p-6 sm:p-12" id="resourceOverlay">
@@ -647,8 +737,6 @@
           </ul>
         </div>
       </div>
-    </div>
-  </div>
 
   <script>
     // Lightweight inline placeholder for missing images (prevents broken UI)
@@ -671,6 +759,14 @@
 
     // UPDATED SECTIONS LIST
     const sections = ['intro', 'module1', 'module2', 'module3', 'module4', 'simulation'];
+    const sectionTitles = {
+      intro: 'Introduction',
+      module1: '1. Evidence & Guidelines',
+      module2: '2. Shared Decision-Making',
+      module3: '3. Clinic Logistics',
+      module4: '4. Knowledge Check',
+      simulation: 'Virtual Injection Lab'
+    };
     let currentSection = 'intro';
 
     let simulationState = {
@@ -681,30 +777,75 @@
 
     function showSection(id) {
       sections.forEach(s => {
-        document.getElementById(s).classList.add('hidden');
+        const sectionEl = document.getElementById(s);
+        if (sectionEl) sectionEl.classList.add('hidden');
         const btn = document.getElementById('btn-' + s);
-        if (btn) btn.classList.remove('bg-blue-50', 'text-blue-700', 'shadow-sm', 'border', 'border-blue-100');
+        if (btn) btn.classList.remove('active');
       });
 
-      document.getElementById(id).classList.remove('hidden');
+      const activeSection = document.getElementById(id);
+      if (activeSection) activeSection.classList.remove('hidden');
       const activeBtn = document.getElementById('btn-' + id);
-      if (activeBtn) activeBtn.classList.add('bg-blue-50', 'text-blue-700', 'shadow-sm', 'border', 'border-blue-100');
+      if (activeBtn) activeBtn.classList.add('active');
 
       currentSection = id;
       updateProgress();
+
+      const mainScroller = document.getElementById('mainScroller');
+      if (mainScroller) mainScroller.scrollTop = 0;
+
+      if (window.innerWidth < 768) {
+        const sidebar = document.getElementById('sidebar');
+        const overlay = document.getElementById('sidebar-overlay');
+        if (sidebar) sidebar.classList.add('-translate-x-full');
+        if (overlay) overlay.classList.add('hidden');
+      }
     }
 
     function updateProgress() {
       const idx = sections.indexOf(currentSection);
       const progress = ((idx + 1) / sections.length) * 100;
-      document.getElementById('progressBar').style.width = progress + '%';
+      const pct = Math.round(progress) + '%';
+
+      const progressBar = document.getElementById('progressBar');
+      if (progressBar) progressBar.style.width = pct;
       const pt = document.getElementById('progressText');
-      if (pt) pt.innerText = Math.round(progress) + '%';
+      if (pt) pt.innerText = pct;
+
+      const sidebarBar = document.getElementById('sidebar-progress-bar');
+      if (sidebarBar) sidebarBar.style.width = pct;
+      const sidebarLabel = document.getElementById('sidebar-progress-label');
+      if (sidebarLabel) sidebarLabel.innerText = pct;
+      const sidebarCount = document.getElementById('sidebar-progress-count');
+      if (sidebarCount) sidebarCount.innerText = `${idx + 1} of ${sections.length}`;
+
+      const breadcrumb = document.getElementById('breadcrumb-section');
+      if (breadcrumb) breadcrumb.innerText = sectionTitles[currentSection] || currentSection;
+      const mobileCurrent = document.getElementById('mobile-current-section');
+      if (mobileCurrent) mobileCurrent.innerText = sectionTitles[currentSection] || currentSection;
     }
 
     function toggleResources() {
       const overlay = document.getElementById('resourceOverlay');
       overlay.classList.toggle('hidden');
+    }
+
+    function toggleSidebar() {
+      const sidebar = document.getElementById('sidebar');
+      const overlay = document.getElementById('sidebar-overlay');
+      if (!sidebar || !overlay) return;
+      if (sidebar.classList.contains('-translate-x-full')) {
+        sidebar.classList.remove('-translate-x-full');
+        overlay.classList.remove('hidden');
+      } else {
+        sidebar.classList.add('-translate-x-full');
+        overlay.classList.add('hidden');
+      }
+    }
+
+    function goToNextSection() {
+      const idx = sections.indexOf(currentSection);
+      if (idx < sections.length - 1) showSection(sections[idx + 1]);
     }
 
     // --- Draggable Injection Marker (mouse + touch) ---
@@ -861,6 +1002,8 @@
 
     // Initial Progress
     updateProgress();
+    showSection('intro');
+  
   </script>
 </body>
 </html>
